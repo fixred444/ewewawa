@@ -1,1 +1,2 @@
-
+import {NextResponse} from 'next/server';import {supabaseAdmin} from '../../../../lib/supabase';
+export async function POST(req:Request){const body=await req.json();const allowed=['fast','medium','slow'];if(!allowed.includes(body.mode))return NextResponse.json({error:'Mode tidak valid'},{status:400});const {data,error}=await supabaseAdmin.from('campaigns').insert({user_id:body.userId,mode:body.mode,message:body.text,status:'queued'}).select().single();if(error)return NextResponse.json({error:error.message},{status:500});return NextResponse.json({message:`Kampanye masuk antrean (${body.mode}). Integrasikan endpoint WhatsApp Cloud API untuk pengiriman yang disetujui.`,campaign:data})}
