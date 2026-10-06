@@ -1,1 +1,2 @@
-
+import {NextResponse} from 'next/server';import {makeAdminToken} from '../../../../lib/adminAuth';
+export async function POST(req:Request){const {username,password}=await req.json();if(username!==process.env.ADMIN_USERNAME||password!==process.env.ADMIN_PASSWORD)return NextResponse.json({error:'Username atau password admin salah'},{status:401});const res=NextResponse.json({ok:true});res.cookies.set('admin_session',makeAdminToken(),{httpOnly:true,secure:true,sameSite:'lax',path:'/',maxAge:60*60*12});return res}
