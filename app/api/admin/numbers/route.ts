@@ -1,1 +1,2 @@
-
+import {NextResponse} from 'next/server';import {supabaseAdmin} from '../../../../lib/supabase';import {isAdmin} from '../../../../lib/adminAuth';
+export async function POST(req:Request){if(!(await isAdmin()))return NextResponse.json({error:'Unauthorized'},{status:401});const body=await req.json();const arr=Array.isArray(body.numbers)?body.numbers:[];const rows=arr.map((phone:string)=>({phone:phone.replace(/\D/g,''),active:true})).filter(x=>x.phone.length>=8);const {error}=await supabaseAdmin.from('contact_numbers').upsert(rows,{onConflict:'phone'});return NextResponse.json(error?{error:error.message}:{message:`${rows.length} nomor ditambahkan`})}
