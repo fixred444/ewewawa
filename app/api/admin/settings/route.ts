@@ -1,1 +1,3 @@
-
+import {NextResponse} from 'next/server';import {supabaseAdmin} from '../../../../lib/supabase';import {isAdmin} from '../../../../lib/adminAuth';
+export async function GET(){if(!(await isAdmin()))return NextResponse.json({error:'Unauthorized'},{status:401});const {data}=await supabaseAdmin.from('settings').select('sale_text').eq('id',1).maybeSingle();return NextResponse.json(data||{})}
+export async function POST(req:Request){if(!(await isAdmin()))return NextResponse.json({error:'Unauthorized'},{status:401});const body=await req.json();const {error}=await supabaseAdmin.from('settings').upsert({id:1,sale_text:String(body.sale_text||''),updated_at:new Date().toISOString()});return NextResponse.json(error?{error:error.message}:{message:'Teks tersimpan'})}
