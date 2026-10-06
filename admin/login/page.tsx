@@ -1,1 +1,3 @@
-
+'use client';
+import {useState} from 'react';import {useRouter} from 'next/navigation';
+export default function AdminLogin(){const [u,setU]=useState('');const [p,setP]=useState('');const [e,setE]=useState('');const r=useRouter();async function go(ev:any){ev.preventDefault();const x=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const j=await x.json();if(!x.ok)return setE(j.error);r.push('/admin')}return <main className="wrap" style={{maxWidth:500}}><div className="card"><h1>Admin Login</h1><form className="stack" onSubmit={go}><input className="input" placeholder="Username admin" value={u} onChange={e=>setU(e.target.value)} required/><input className="input" placeholder="Password" type="password" value={p} onChange={e=>setP(e.target.value)} required/><button className="btn">Masuk Admin</button>{e&&<div className="error">{e}</div>}</form></div></main>}
