@@ -1,1 +1,2 @@
-
+import {NextResponse} from 'next/server';import {supabaseAdmin} from '../../../../lib/supabase';import {isAdmin} from '../../../../lib/adminAuth';
+export async function GET(){if(!(await isAdmin()))return NextResponse.json({error:'Unauthorized'},{status:401});const {data,error}=await supabaseAdmin.from('profiles').select('id,name,email,role,balance,created_at').order('created_at',{ascending:false});return NextResponse.json(error?{error:error.message}:{items:data||[]})}
